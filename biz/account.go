@@ -11,7 +11,7 @@ type AccountServer struct {
 }
 
 func (a *AccountServer) GetAccountList(ctx context.Context, req *pb.AccountPagingRequest) (*pb.AccountListRes, error) {
-	reply, err := handler.GetAccountList(ctx, req)
+	reply, err := handler.GetAccountList(ctx, req.GetPageNo(), req.GetPageSize())
 	if err != nil {
 		return nil, err
 	}
@@ -19,7 +19,7 @@ func (a *AccountServer) GetAccountList(ctx context.Context, req *pb.AccountPagin
 }
 
 func (a *AccountServer) GetAccountByMobile(ctx context.Context, req *pb.MobileRequest) (*pb.AccountRes, error) {
-	reply, err := handler.GetAccountByMobile(ctx, req)
+	reply, err := handler.GetAccountByMobile(ctx, req.Mobile)
 	if err != nil {
 		return nil, err
 	}
@@ -27,7 +27,7 @@ func (a *AccountServer) GetAccountByMobile(ctx context.Context, req *pb.MobileRe
 }
 
 func (a *AccountServer) GetAccountByID(ctx context.Context, req *pb.IDRequest) (*pb.AccountRes, error) {
-	reply, err := handler.GetAccountByID(ctx, req)
+	reply, err := handler.GetAccountByID(ctx, req.Id)
 	if err != nil {
 		return nil, err
 	}
@@ -35,7 +35,7 @@ func (a *AccountServer) GetAccountByID(ctx context.Context, req *pb.IDRequest) (
 }
 
 func (a *AccountServer) AddAccount(ctx context.Context, req *pb.AddAccountRequest) (*pb.AccountRes, error) {
-	reply, err := handler.AddAccount(ctx, req)
+	reply, err := handler.AddAccount(ctx, req.Mobile, req.Password, req.Nickname, req.Gender)
 	if err != nil {
 		return nil, err
 	}
@@ -43,7 +43,7 @@ func (a *AccountServer) AddAccount(ctx context.Context, req *pb.AddAccountReques
 }
 
 func (a *AccountServer) UpdateAccount(ctx context.Context, req *pb.UpdateAccountRequest) (*pb.AccountRes, error) {
-	reply, err := handler.UpdateAccount(ctx, req)
+	reply, err := handler.UpdateAccount(ctx, req.Id, req.Mobile, req.Password, req.Nickname, req.Gender)
 	if err != nil {
 		return nil, err
 	}
@@ -51,7 +51,7 @@ func (a *AccountServer) UpdateAccount(ctx context.Context, req *pb.UpdateAccount
 }
 
 func (a *AccountServer) CheckPassword(ctx context.Context, req *pb.CheckPasswordRequest) (*pb.CheckPasswordRes, error) {
-	reply, err := handler.CheckPassword(ctx, req)
+	reply, err := handler.CheckPassword(ctx, req.AccountId, req.Password)
 	if err != nil {
 		return nil, err
 	}

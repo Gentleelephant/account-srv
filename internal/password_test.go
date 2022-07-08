@@ -1,4 +1,4 @@
-package biz
+package internal
 
 import (
 	"crypto/md5"

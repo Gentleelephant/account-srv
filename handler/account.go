@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"account-srv/biz"
 	"account-srv/custom_error"
 	"account-srv/internal"
 	"account-srv/model"
@@ -27,9 +26,9 @@ func Paginate(pageNo, pageSize int) func(db *gorm.DB) *gorm.DB {
 	}
 }
 
-func GetAccountList(ctx context.Context, req *pb.AccountPagingRequest) (*pb.AccountListRes, error) {
+func GetAccountList(ctx context.Context, pageNo, pageSize uint32) (*pb.AccountListRes, error) {
 	var accountList []*model.Account
-	result := internal.DB.Model(&model.Account{}).Scopes(Paginate(int(req.PageNo), int(req.PageSize))).Find(&accountList)
+	result := internal.DB.Model(&model.Account{}).Scopes(Paginate(int(pageNo), int(pageSize))).Find(&accountList)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -41,38 +40,37 @@ func GetAccountList(ctx context.Context, req *pb.AccountPagingRequest) (*pb.Acco
 	return accountListRes, nil
 }
 
-func GetAccountByMobile(ctx context.Context, req *pb.MobileRequest) (*pb.AccountRes, error) {
+func GetAccountByMobile(ctx context.Context, mobile string) (*pb.AccountRes, error) {
 	account := &model.Account{}
-	res := internal.DB.Model(&model.Account{}).Where("mobile = ?", req.Mobile).Find(account)
+	res := internal.DB.Model(&model.Account{}).Where("mobile = ?", mobile).Find(account)
 	if res.Error != nil {
 		return nil, res.Error
 	}
 	return Model2Pb(account), nil
 }
 
-func GetAccountByID(ctx context.Context, req *pb.IDRequest) (*pb.AccountRes, error) {
+func GetAccountByID(ctx context.Context, id int32) (*pb.AccountRes, error) {
 	account := &model.Account{}
-	res := internal.DB.Model(&model.Account{}).Where("id = ?", req.Id).Find(account)
+	res := internal.DB.Model(&model.Account{}).Where("id = ?", id).Find(account)
 	if res.Error != nil {
 		return nil, res.Error
 	}
 	return Model2Pb(account), nil
 }
 
-func AddAccount(ctx context.Context, req *pb.AddAccountRequest) (*pb.AccountRes, error) {
+func AddAccount(ctx context.Context, mobile, password, nickname, gender string) (*pb.AccountRes, error) {
 	account := &model.Account{}
 
-	find := internal.DB.Model(&model.Account{}).Where("mobile = ?", req.Mobile).Find(account)
+	find := internal.DB.Model(&model.Account{}).Where("mobile = ?", mobile).Find(account)
 	if find.RowsAffected == 1 {
 		return nil, errors.New(custom_error.AccountExists)
 	}
-	err := copier.Copy(&account, &req)
-	if err != nil {
-		return nil, err
-	}
-	slat, encodeSlat := biz.PasswordEncode(req.Password)
+	slat, encodeSlat := internal.PasswordEncode(password)
 	account.Salt = slat
 	account.Password = encodeSlat
+	account.Mobile = mobile
+	account.Nickname = nickname
+	account.Gender = gender
 	result := internal.DB.Model(&model.Account{}).Create(account)
 	if result.Error != nil {
 		return nil, result.Error
@@ -80,29 +78,28 @@ func AddAccount(ctx context.Context, req *pb.AddAccountRequest) (*pb.AccountRes,
 	return Model2Pb(account), nil
 }
 
-func UpdateAccount(ctx context.Context, req *pb.UpdateAccountRequest) (*pb.AccountRes, error) {
+func UpdateAccount(ctx context.Context, id uint32, mobile, password, nickname, gender string) (*pb.AccountRes, error) {
 	account := &model.Account{}
-	err := copier.Copy(&account, &req)
-	if err != nil {
-		return nil, err
-	}
-	find := internal.DB.Model(&model.Account{}).Where("id = ?", req.Id).Find(account)
+	find := internal.DB.Model(&model.Account{}).Where("id = ?", id).Find(account)
 	if find.RowsAffected != 1 {
 		return nil, errors.New(custom_error.AccountNotFound)
 	}
-	slat, encodePassword := biz.PasswordEncode(req.Password)
+	slat, encodePassword := internal.PasswordEncode(password)
 	account.Salt = slat
 	account.Password = encodePassword
-	result := internal.DB.Model(&model.Account{}).Where("id = ?", req.Id).Updates(account)
+	account.Mobile = mobile
+	account.Nickname = nickname
+	account.Gender = gender
+	result := internal.DB.Model(&model.Account{}).Where("id = ?", id).Updates(account)
 	if result.Error != nil {
 		return nil, result.Error
 	}
 	return Model2Pb(account), nil
 }
 
-func CheckPassword(ctx context.Context, req *pb.CheckPasswordRequest) (*pb.CheckPasswordRes, error) {
+func CheckPassword(ctx context.Context, id, password string) (*pb.CheckPasswordRes, error) {
 	account := &model.Account{}
-	res := internal.DB.Model(&model.Account{}).Where("id = ?", req.AccountId).Find(account)
+	res := internal.DB.Model(&model.Account{}).Where("id = ?", id).Find(account)
 	if res.Error != nil {
 		return nil, res.Error
 	}
@@ -112,7 +109,7 @@ func CheckPassword(ctx context.Context, req *pb.CheckPasswordRequest) (*pb.Check
 	if account.Salt == "" {
 		return nil, errors.New(custom_error.AccountSlatIsEmpty)
 	}
-	verify := biz.PasswordVerify(req.Password, account.Salt, account.Password)
+	verify := internal.PasswordVerify(password, account.Salt, account.Password)
 	return &pb.CheckPasswordRes{Result: verify}, nil
 }
 

@@ -14,11 +14,14 @@ func Start() error {
 
 	w := sync.WaitGroup{}
 
+	port := "9901"
+	host := "127.0.0.1"
+
 	// 初始化数据库
 	internal.InitDB()
 
 	// 启动grpc server
-	listen, err := net.Listen("tcp", ":9901")
+	listen, err := net.Listen("tcp", fmt.Sprintf("%s:%s", host, port))
 	if err != nil {
 		return err
 	}
@@ -31,6 +34,7 @@ func Start() error {
 		if err != nil {
 			fmt.Println("server error")
 		}
+		fmt.Printf("listen on %s:%s", host, port)
 	}()
 	w.Wait()
 	return nil
