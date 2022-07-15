@@ -5,6 +5,7 @@ import (
 	"account-srv/internal"
 	"fmt"
 	pb "github.com/Gentleelephant/proto-center/pb/model"
+	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"net"
 	"sync"
@@ -25,6 +26,7 @@ func Start() error {
 	// 启动grpc server
 	listen, err := net.Listen("tcp", fmt.Sprintf("%s:%s", host, port))
 	if err != nil {
+		zap.L().Error("Start grpc server", zap.Error(err))
 		return err
 	}
 	server := grpc.NewServer()
@@ -32,11 +34,11 @@ func Start() error {
 	w.Add(1)
 	go func() {
 		defer w.Done()
-		err := server.Serve(listen)
+		err = server.Serve(listen)
 		if err != nil {
-			fmt.Println("server error")
+			zap.L().Error("Server Start Error", zap.Error(err))
 		}
-		fmt.Printf("listen on %s:%s", host, port)
+		zap.L().Info("Server Start", zap.String("host", host), zap.String("port", port))
 	}()
 	w.Wait()
 	return nil

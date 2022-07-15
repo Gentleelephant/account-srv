@@ -1,8 +1,10 @@
 package internal
 
 import (
+	"account-srv/config"
 	"account-srv/model"
 	"fmt"
+	"go.uber.org/zap"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -24,8 +26,14 @@ func InitDB() {
 			Colorful:                  false,         // 禁用彩色打印
 		},
 	)
+	vr := config.RemoteConfig
+	host := vr.GetString(config.MysqlHost)
+	port := vr.GetInt(config.MysqlPort)
+	user := vr.GetString(config.MysqlUsername)
+	password := vr.GetString(config.MysqlPassword)
+	database := vr.GetString(config.MysqlDatabase)
 	// 从配置中读取数据库配置
-	conn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", "root", "root", "localhost", "3306", "gorm")
+	conn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8&parseTime=True&loc=Local", user, password, host, port, database)
 	open, err := gorm.Open(mysql.Open(conn), &gorm.Config{
 		Logger: newLogger,
 		NamingStrategy: schema.NamingStrategy{
@@ -37,7 +45,7 @@ func InitDB() {
 	}
 	err = open.AutoMigrate(&model.Account{})
 	if err != nil {
-		Logger.Error(err.Error())
+		zap.L().Error(err.Error())
 		return
 	}
 	DB = open

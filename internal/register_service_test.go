@@ -77,6 +77,8 @@ func TestViper(t *testing.T) {
 }
 
 func TestViperEtcd(t *testing.T) {
+	ints := make(chan int)
 	config.ConfigFilePath = "../config/config.yaml"
 	initRemoteConfig()
+	<-ints
 }

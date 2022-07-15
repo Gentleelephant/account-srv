@@ -34,7 +34,7 @@ func ServiceRegister(ctx context.Context) {
 	if err != nil {
 		panic(err)
 	}
-	address := fmt.Sprintf("%s:%d", hostname, config.LocalConfig.GetInt(config.ServicePort))
+	address := fmt.Sprintf("%s:%d", hostname, config.LocalConfig.GetInt(config.ServiceDynamicPort))
 	key := fmt.Sprintf("%s/%s/%s", serviceEndpointKeyPrefix, ServiceName, address)
 	zap.L().Debug("register service", zap.String("service", ServiceName), zap.String("address", address))
 	// 过期时间: 3秒钟
