@@ -12,6 +12,10 @@ const (
 	logTmFmt = "2006-01-02 15:04:05"
 )
 
+var (
+	Logger *zap.Logger
+)
+
 //func GinLogger() gin.HandlerFunc {
 //	return func(c *gin.Context) {
 //		start := time.Now()
@@ -33,16 +37,17 @@ const (
 //	}
 //}
 
-func GetLogger() {
+func InitLogger() {
 	Encoder := GetEncoder()
 	WriteSyncer := GetWriteSyncer()
 	LevelEnabler := GetLevelEnabler()
 	ConsoleEncoder := GetConsoleEncoder()
 	newCore := zapcore.NewTee(
-		zapcore.NewCore(Encoder, WriteSyncer, LevelEnabler),                          // 写入文件
-		zapcore.NewCore(ConsoleEncoder, zapcore.Lock(os.Stdout), zapcore.DebugLevel), // 写入控制台
+		zapcore.NewCore(Encoder, WriteSyncer, LevelEnabler),                    // 写入文件
+		zapcore.NewCore(ConsoleEncoder, zapcore.Lock(os.Stdout), LevelEnabler), // 写入控制台
 	)
 	logger := zap.New(newCore, zap.AddCaller())
+	Logger = logger
 	zap.ReplaceGlobals(logger)
 }
 

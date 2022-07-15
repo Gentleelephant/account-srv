@@ -5,8 +5,9 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"account-srv/config"
+	"account-srv/internal"
 	"account-srv/server"
-	"fmt"
 	"github.com/spf13/cobra"
 )
 
@@ -18,7 +19,7 @@ var startCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		err := server.Start()
 		if err != nil {
-			fmt.Println(err)
+			internal.Logger.Error(err.Error())
 		}
 	},
 }
@@ -35,4 +36,5 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// startCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	startCmd.PersistentFlags().StringVarP(&config.ConfigFilePath, "config", "c", "./config.yaml", "config file path")
 }

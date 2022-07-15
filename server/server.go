@@ -19,6 +19,8 @@ func Start() error {
 
 	// 初始化数据库
 	internal.InitDB()
+	// 初始化日志
+	internal.InitLogger()
 
 	// 启动grpc server
 	listen, err := net.Listen("tcp", fmt.Sprintf("%s:%s", host, port))

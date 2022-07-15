@@ -24,7 +24,7 @@ func InitDB() {
 			Colorful:                  false,         // 禁用彩色打印
 		},
 	)
-
+	// 从配置中读取数据库配置
 	conn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", "root", "root", "localhost", "3306", "gorm")
 	open, err := gorm.Open(mysql.Open(conn), &gorm.Config{
 		Logger: newLogger,
@@ -37,7 +37,7 @@ func InitDB() {
 	}
 	err = open.AutoMigrate(&model.Account{})
 	if err != nil {
-		// TODO 添加日志
+		Logger.Error(err.Error())
 		return
 	}
 	DB = open
