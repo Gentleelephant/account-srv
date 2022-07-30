@@ -5,9 +5,9 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"account-srv/config"
-	"account-srv/internal"
-	"account-srv/server"
+	"github.com/Gentleelephant/account-srv/config"
+	"github.com/Gentleelephant/account-srv/internal"
+	"github.com/Gentleelephant/account-srv/server"
 	"github.com/spf13/cobra"
 )
 
@@ -36,5 +36,5 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// startCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-	startCmd.PersistentFlags().StringVarP(&config.ConfigFilePath, "config", "c", "./config.yaml", "config file path")
+	startCmd.PersistentFlags().StringVarP(&config.FilePath, "config", "c", "./config.yaml", "config file path")
 }

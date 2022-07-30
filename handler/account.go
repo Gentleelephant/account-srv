@@ -26,9 +26,9 @@ func Paginate(pageNo, pageSize int) func(db *gorm.DB) *gorm.DB {
 	}
 }
 
-func GetAccountList(ctx context.Context, pageNo, pageSize uint32) (*pb.AccountListRes, error) {
+func GetAccountList(ctx context.Context, db *gorm.DB, pageNo, pageSize uint32) (*pb.AccountListRes, error) {
 	var accountList []*model.Account
-	result := internal.DB.Model(&model.Account{}).Scopes(Paginate(int(pageNo), int(pageSize))).Find(&accountList)
+	result := db.Model(&model.Account{}).Scopes(Paginate(int(pageNo), int(pageSize))).Find(&accountList)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -40,28 +40,28 @@ func GetAccountList(ctx context.Context, pageNo, pageSize uint32) (*pb.AccountLi
 	return accountListRes, nil
 }
 
-func GetAccountByMobile(ctx context.Context, mobile string) (*pb.AccountRes, error) {
+func GetAccountByMobile(ctx context.Context, db *gorm.DB, mobile string) (*pb.AccountRes, error) {
 	account := &model.Account{}
-	res := internal.DB.Model(&model.Account{}).Where("mobile = ?", mobile).Find(account)
+	res := db.Model(&model.Account{}).Where("mobile = ?", mobile).Find(account)
 	if res.Error != nil {
 		return nil, res.Error
 	}
 	return Model2Pb(account), nil
 }
 
-func GetAccountByID(ctx context.Context, id int32) (*pb.AccountRes, error) {
+func GetAccountByID(ctx context.Context, db *gorm.DB, id int32) (*pb.AccountRes, error) {
 	account := &model.Account{}
-	res := internal.DB.Model(&model.Account{}).Where("id = ?", id).Find(account)
+	res := db.Model(&model.Account{}).Where("id = ?", id).Find(account)
 	if res.Error != nil {
 		return nil, res.Error
 	}
 	return Model2Pb(account), nil
 }
 
-func AddAccount(ctx context.Context, mobile, password, nickname, gender string) (*pb.AccountRes, error) {
+func AddAccount(ctx context.Context, db *gorm.DB, mobile, password, nickname, gender string) (*pb.AccountRes, error) {
 	account := &model.Account{}
 
-	find := internal.DB.Model(&model.Account{}).Where("mobile = ?", mobile).Find(account)
+	find := db.Model(&model.Account{}).Where("mobile = ?", mobile).Find(account)
 	if find.RowsAffected == 1 {
 		return nil, errors.New(custom_error.AccountExists)
 	}
@@ -71,16 +71,16 @@ func AddAccount(ctx context.Context, mobile, password, nickname, gender string) 
 	account.Mobile = mobile
 	account.Nickname = nickname
 	account.Gender = gender
-	result := internal.DB.Model(&model.Account{}).Create(account)
+	result := db.Model(&model.Account{}).Create(account)
 	if result.Error != nil {
 		return nil, result.Error
 	}
 	return Model2Pb(account), nil
 }
 
-func UpdateAccount(ctx context.Context, id uint32, mobile, password, nickname, gender string) (*pb.AccountRes, error) {
+func UpdateAccount(ctx context.Context, db *gorm.DB, id uint32, mobile, password, nickname, gender string) (*pb.AccountRes, error) {
 	account := &model.Account{}
-	find := internal.DB.Model(&model.Account{}).Where("id = ?", id).Find(account)
+	find := db.Model(&model.Account{}).Where("id = ?", id).Find(account)
 	if find.RowsAffected != 1 {
 		return nil, errors.New(custom_error.AccountNotFound)
 	}
@@ -90,16 +90,16 @@ func UpdateAccount(ctx context.Context, id uint32, mobile, password, nickname, g
 	account.Mobile = mobile
 	account.Nickname = nickname
 	account.Gender = gender
-	result := internal.DB.Model(&model.Account{}).Where("id = ?", id).Updates(account)
+	result := db.Model(&model.Account{}).Where("id = ?", id).Updates(account)
 	if result.Error != nil {
 		return nil, result.Error
 	}
 	return Model2Pb(account), nil
 }
 
-func CheckPassword(ctx context.Context, id, password string) (*pb.CheckPasswordRes, error) {
+func CheckPassword(ctx context.Context, db *gorm.DB, id, password string) (*pb.CheckPasswordRes, error) {
 	account := &model.Account{}
-	res := internal.DB.Model(&model.Account{}).Where("id = ?", id).Find(account)
+	res := db.Model(&model.Account{}).Where("id = ?", id).Find(account)
 	if res.Error != nil {
 		return nil, res.Error
 	}

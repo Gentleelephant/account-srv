@@ -19,9 +19,9 @@ func Start() error {
 	host := "127.0.0.1"
 
 	// 初始化配置
-	internal.InitConfig()
+
 	// 初始化数据库
-	internal.InitDB()
+
 	// 初始化日志
 	internal.InitLogger()
 
