@@ -10,16 +10,21 @@ import (
 
 // 本地配置
 var (
-	LocalConfig  = viper.New()
+	LocalConfig  *viper.Viper
 	RemoteConfig *viper.Viper
 	DB           *gorm.DB
 	FilePath     string // 配置文件路径，命令启动时指定
 )
 
 func GetRemoteConfig() {
+	localConfig, err := utils.GetConfig(FilePath, consts.ConfigFileType)
+	if err != nil {
+		panic(err)
+	}
+	LocalConfig = localConfig
 	LocalConfig.SetConfigFile(FilePath)
 	LocalConfig.SetConfigType("yaml")
-	err := LocalConfig.ReadInConfig()
+	err = LocalConfig.ReadInConfig()
 	if err != nil {
 		panic(err)
 	}

@@ -16,7 +16,10 @@ func TestEtcd(t *testing.T) {
 		// handle error!
 		t.Error(err)
 	}
-	cli.Put(context.TODO(), "account-srv-00001", "localhost:8080")
+	_, err = cli.Put(context.TODO(), "account-srv-00001", "localhost:8080")
+	if err != nil {
+		return
+	}
 	resp, err := cli.Get(context.TODO(), "account-srv", clientv3.WithPrefix())
 	if err != nil {
 		// handle error!

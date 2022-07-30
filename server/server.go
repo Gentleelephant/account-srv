@@ -5,6 +5,7 @@ import (
 	"github.com/Gentleelephant/account-srv/biz"
 	"github.com/Gentleelephant/account-srv/config"
 	"github.com/Gentleelephant/account-srv/internal"
+	"github.com/Gentleelephant/common/utils"
 	pb "github.com/Gentleelephant/proto-center/pb/model"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
@@ -16,7 +17,10 @@ func Start() error {
 
 	w := sync.WaitGroup{}
 
-	port := "9901"
+	port, err := utils.GetTCPPort()
+	if err != nil {
+		panic(err)
+	}
 	host := "127.0.0.1"
 
 	// 初始化配置
@@ -27,8 +31,8 @@ func Start() error {
 	internal.InitLogger()
 
 	// 启动grpc server
-	listen, err := net.Listen("tcp", fmt.Sprintf("%s:%s", host, port))
-	zap.L().Info("grpc server listen on", zap.String("host", host), zap.String("port", port))
+	listen, err := net.Listen("tcp", fmt.Sprintf("%s:%d", host, port))
+	zap.L().Info("grpc server listen on", zap.String("host", host), zap.Int("port", port))
 	if err != nil {
 		zap.L().Error("Start grpc server", zap.Error(err))
 		return err
@@ -42,7 +46,7 @@ func Start() error {
 		if err != nil {
 			zap.L().Error("Server Start Error", zap.Error(err))
 		}
-		zap.L().Info("Server Start", zap.String("host", host), zap.String("port", port))
+		zap.L().Info("Server Start", zap.String("host", host), zap.Int("port", port))
 	}()
 	w.Wait()
 	return nil
