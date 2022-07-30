@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"github.com/Gentleelephant/account-srv/config"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
@@ -78,7 +79,7 @@ func GetConsoleEncoder() zapcore.Encoder {
 // GetWriteSyncer 自定义的WriteSyncer
 func GetWriteSyncer() zapcore.WriteSyncer {
 	lumberJackLogger := &lumberjack.Logger{
-		Filename:   "./zap.log",
+		Filename:   config.LocalConfig.GetString("logger.path"),
 		MaxSize:    200,
 		MaxBackups: 10,
 		MaxAge:     30,

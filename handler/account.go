@@ -8,6 +8,7 @@ import (
 	"github.com/Gentleelephant/account-srv/model"
 	pb "github.com/Gentleelephant/proto-center/pb/model"
 	"github.com/jinzhu/copier"
+	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
 
@@ -27,6 +28,7 @@ func Paginate(pageNo, pageSize int) func(db *gorm.DB) *gorm.DB {
 }
 
 func GetAccountList(ctx context.Context, db *gorm.DB, pageNo, pageSize uint32) (*pb.AccountListRes, error) {
+	zap.L().Info("GetAccountList", zap.Uint32("pageNo", pageNo), zap.Uint32("pageSize", pageSize))
 	var accountList []*model.Account
 	result := db.Model(&model.Account{}).Scopes(Paginate(int(pageNo), int(pageSize))).Find(&accountList)
 	if result.Error != nil {

@@ -3,6 +3,7 @@ package server
 import (
 	"fmt"
 	"github.com/Gentleelephant/account-srv/biz"
+	"github.com/Gentleelephant/account-srv/config"
 	"github.com/Gentleelephant/account-srv/internal"
 	pb "github.com/Gentleelephant/proto-center/pb/model"
 	"go.uber.org/zap"
@@ -19,9 +20,9 @@ func Start() error {
 	host := "127.0.0.1"
 
 	// 初始化配置
-
+	config.GetRemoteConfig()
 	// 初始化数据库
-
+	config.GetDB()
 	// 初始化日志
 	internal.InitLogger()
 

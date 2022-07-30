@@ -1,5 +1,5 @@
 logger:
-  path: /var/log/logger.log
+  path: ./log/zap.log
   level: info
   dateformat: '%Y-%m-%d %H:%M:%S'
   maxsize: 10485760
