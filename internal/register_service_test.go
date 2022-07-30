@@ -1,9 +1,9 @@
 package internal
 
 import (
-	"account-srv/config"
 	"context"
 	"fmt"
+	"github.com/Gentleelephant/account-srv/config"
 	"io"
 	"net"
 	"net/http"

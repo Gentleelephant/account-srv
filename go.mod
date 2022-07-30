@@ -1,4 +1,4 @@
-module account-srv
+module github.com/Gentleelephant/account-srv
 
 go 1.16
 

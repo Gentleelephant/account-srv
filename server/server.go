@@ -1,9 +1,9 @@
 package server
 
 import (
-	"account-srv/biz"
-	"account-srv/internal"
 	"fmt"
+	"github.com/Gentleelephant/account-srv/biz"
+	"github.com/Gentleelephant/account-srv/internal"
 	pb "github.com/Gentleelephant/proto-center/pb/model"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
@@ -18,6 +18,8 @@ func Start() error {
 	port := "9901"
 	host := "127.0.0.1"
 
+	// 初始化配置
+	internal.InitConfig()
 	// 初始化数据库
 	internal.InitDB()
 	// 初始化日志
@@ -25,6 +27,7 @@ func Start() error {
 
 	// 启动grpc server
 	listen, err := net.Listen("tcp", fmt.Sprintf("%s:%s", host, port))
+	zap.L().Info("grpc server listen on", zap.String("host", host), zap.String("port", port))
 	if err != nil {
 		zap.L().Error("Start grpc server", zap.Error(err))
 		return err

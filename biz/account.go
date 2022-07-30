@@ -1,8 +1,8 @@
 package biz
 
 import (
-	"account-srv/handler"
 	"context"
+	"github.com/Gentleelephant/account-srv/handler"
 	"github.com/Gentleelephant/proto-center/pb/model"
 )
 

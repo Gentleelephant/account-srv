@@ -1,10 +1,10 @@
 package internal
 
 import (
-	"account-srv/config"
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/Gentleelephant/account-srv/config"
 	clientv3 "go.etcd.io/etcd/client/v3"
 	"go.uber.org/zap"
 	"os"

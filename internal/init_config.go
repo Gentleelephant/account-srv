@@ -1,9 +1,9 @@
 package internal
 
 import (
-	"account-srv/config"
-	"account-srv/util"
 	"fmt"
+	"github.com/Gentleelephant/account-srv/config"
+	"github.com/Gentleelephant/account-srv/util"
 	"github.com/nacos-group/nacos-sdk-go/clients"
 	"github.com/nacos-group/nacos-sdk-go/common/constant"
 	"github.com/nacos-group/nacos-sdk-go/vo"
@@ -13,7 +13,7 @@ import (
 )
 
 func InitConfig() {
-	initRemoteConfig()
+	initLocalConfig()
 	initRemoteConfig()
 }
 

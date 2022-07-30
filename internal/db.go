@@ -1,9 +1,9 @@
 package internal
 
 import (
-	"account-srv/config"
-	"account-srv/model"
 	"fmt"
+	"github.com/Gentleelephant/account-srv/config"
+	"github.com/Gentleelephant/account-srv/model"
 	"go.uber.org/zap"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -34,6 +34,7 @@ func InitDB() {
 	database := vr.GetString(config.MysqlDatabase)
 	// 从配置中读取数据库配置
 	conn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8&parseTime=True&loc=Local", user, password, host, port, database)
+	zap.L().Info("Connecting to database", zap.String("host", host), zap.Int("port", port), zap.String("database", database))
 	open, err := gorm.Open(mysql.Open(conn), &gorm.Config{
 		Logger: newLogger,
 		NamingStrategy: schema.NamingStrategy{

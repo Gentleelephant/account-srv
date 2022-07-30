@@ -1,11 +1,11 @@
 package handler
 
 import (
-	"account-srv/custom_error"
-	"account-srv/internal"
-	"account-srv/model"
 	"context"
 	"errors"
+	"github.com/Gentleelephant/account-srv/custom_error"
+	"github.com/Gentleelephant/account-srv/internal"
+	"github.com/Gentleelephant/account-srv/model"
 	pb "github.com/Gentleelephant/proto-center/pb/model"
 	"github.com/jinzhu/copier"
 	"gorm.io/gorm"
