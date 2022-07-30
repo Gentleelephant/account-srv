@@ -14,6 +14,7 @@ var (
 	RemoteConfig *viper.Viper
 	DB           *gorm.DB
 	FilePath     string // 配置文件路径，命令启动时指定
+	NacosConfig  *utils.NacosConfigparams
 )
 
 func GetRemoteConfig() {
@@ -39,6 +40,7 @@ func GetRemoteConfig() {
 		NacosDataId:    LocalConfig.GetString(consts.NacosDataId),
 		NacosGroup:     LocalConfig.GetString(consts.NacosGroup),
 	}
+	NacosConfig = &configParams
 	fmt.Println("read nacos config:", configParams)
 	RemoteConfig, err = utils.InitRemoteConfig(configParams)
 	if err != nil {
