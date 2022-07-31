@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/Gentleelephant/common/consts"
 	"github.com/Gentleelephant/common/utils"
+	"github.com/nacos-group/nacos-sdk-go/common/constant"
 	"github.com/spf13/viper"
 	"gorm.io/gorm"
 )
@@ -31,14 +32,23 @@ func GetRemoteConfig() {
 	}
 	fmt.Println("read local config:", LocalConfig.AllSettings())
 	configParams := utils.NacosConfigparams{
-		NacosNamespace: LocalConfig.GetString(consts.NacosNamespace),
-		NacosHost:      LocalConfig.GetString(consts.NacosHost),
-		NacosLogDir:    LocalConfig.GetString(consts.NacosLogDir),
-		NacosCacheDir:  LocalConfig.GetString(consts.NacosCacheDir),
-		NacosLogLevel:  LocalConfig.GetString(consts.NacosLogLevel),
-		NacosPort:      LocalConfig.GetUint64(consts.NacosPort),
-		NacosDataId:    LocalConfig.GetString(consts.NacosDataId),
-		NacosGroup:     LocalConfig.GetString(consts.NacosGroup),
+		DataId: LocalConfig.GetString(consts.NacosDataId),
+		Group:  LocalConfig.GetString(consts.NacosGroup),
+		ClientConfig: constant.ClientConfig{
+			TimeoutMs:    LocalConfig.GetUint64(consts.NacosTimeoutMs),
+			BeatInterval: LocalConfig.GetInt64(consts.NacosBeatInterval),
+			NamespaceId:  LocalConfig.GetString(consts.NacosNamespaceId),
+			CacheDir:     LocalConfig.GetString(consts.NacosCacheDir),
+			LogDir:       LocalConfig.GetString(consts.NacosLogDir),
+			LogLevel:     LocalConfig.GetString(consts.NacosLogLevel),
+			ContextPath:  LocalConfig.GetString(consts.NacosContextPath),
+		},
+		ServerConfig: constant.ServerConfig{
+			Scheme:      LocalConfig.GetString(consts.NacosScheme),
+			ContextPath: LocalConfig.GetString(consts.NacosContextPath),
+			IpAddr:      LocalConfig.GetString(consts.NacosIpAddr),
+			Port:        LocalConfig.GetUint64(consts.NacosPort),
+		},
 	}
 	NacosConfig = &configParams
 	fmt.Println("read nacos config:", configParams)

@@ -22,7 +22,15 @@ func Start() error {
 	if err != nil {
 		panic(err)
 	}
-	host := "127.0.0.1"
+	ip, err := utils.GetOutBoundIP()
+	if err != nil {
+		addr, err := utils.GetInterfaceIpv4Addr("eth0")
+		if err != nil {
+			panic(err)
+		}
+		ip = addr
+	}
+	host := ip
 
 	// 初始化配置
 	config.GetRemoteConfig()
@@ -51,8 +59,9 @@ func Start() error {
 	}()
 
 	// 服务注册
+
 	param := vo.RegisterInstanceParam{
-		Ip:          "localhost",
+		Ip:          host,
 		Port:        uint64(port),
 		Weight:      0,
 		Enable:      true,
@@ -63,14 +72,6 @@ func Start() error {
 		GroupName:   "account",
 		Ephemeral:   true,
 	}
-	//param := vo.DeregisterInstanceParam{
-	//	Ip:          "localhost",
-	//	Port:        51558,
-	//	Cluster:     "cluster-account",
-	//	ServiceName: "account-srv",
-	//	GroupName:   "account",
-	//	Ephemeral:   false,
-	//}
 	_, err = utils.RegisterInstance(*config.NacosConfig, param)
 	if err != nil {
 		zap.L().Error("RegisterInstance Error", zap.Error(err))
