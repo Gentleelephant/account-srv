@@ -11,12 +11,12 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"net"
-	"sync"
+	"os"
+	"os/signal"
+	"syscall"
 )
 
-func Start() error {
-
-	w := sync.WaitGroup{}
+func Start() {
 
 	port, err := utils.GetTCPPort()
 	if err != nil {
@@ -44,13 +44,10 @@ func Start() error {
 	zap.L().Info("grpc server listen on", zap.String("host", host), zap.Int("port", port))
 	if err != nil {
 		zap.L().Error("Start grpc server", zap.Error(err))
-		return err
 	}
 	server := grpc.NewServer()
 	pb.RegisterAccountServiceServer(server, &biz.AccountServer{})
-	w.Add(1)
 	go func() {
-		defer w.Done()
 		err = server.Serve(listen)
 		if err != nil {
 			zap.L().Error("Server Start Error", zap.Error(err))
@@ -59,24 +56,43 @@ func Start() error {
 	}()
 
 	// 服务注册
-
 	param := vo.RegisterInstanceParam{
 		Ip:          host,
 		Port:        uint64(port),
-		Weight:      0,
+		Weight:      10,
 		Enable:      true,
 		Healthy:     true,
 		Metadata:    nil,
-		ClusterName: "cluster-account",
-		ServiceName: "account-srv",
-		GroupName:   "account",
+		ClusterName: config.LocalConfig.GetString("service.cluster"),
+		ServiceName: config.LocalConfig.GetString("service.name"),
+		GroupName:   config.LocalConfig.GetString("service.group"),
 		Ephemeral:   true,
 	}
 	_, err = utils.RegisterInstance(*config.NacosConfig, param)
 	if err != nil {
 		zap.L().Error("RegisterInstance Error", zap.Error(err))
-		return err
 	}
-	w.Wait()
-	return nil
+	sig := make(chan os.Signal)
+	signal.Notify(sig, syscall.SIGTERM, syscall.SIGINT)
+	s := <-sig
+	// 注销服务
+	deparams := vo.DeregisterInstanceParam{
+		Ip:          host,
+		Port:        uint64(port),
+		Cluster:     config.LocalConfig.GetString("service.cluster"),
+		ServiceName: config.LocalConfig.GetString("service.name"),
+		GroupName:   config.LocalConfig.GetString("service.group"),
+		Ephemeral:   true,
+	}
+	_, err = utils.DeregisterInstance(*config.NacosConfig, deparams)
+	if err != nil {
+		zap.L().Error("DeregisterInstance Error", zap.Error(err))
+	}
+	zap.L().Info("Server deregister", zap.String("host", host),
+		zap.Int("port", port),
+		zap.String("cluster", "DEFAULT"),
+		zap.String("service name", "account-srv"),
+		zap.String("group name", "DEFAULT_GROUP"),
+		zap.Bool("ephemeral", true))
+	zap.L().Info("Receive Signal", zap.String("signal", s.String()))
 }

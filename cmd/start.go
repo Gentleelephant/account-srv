@@ -6,7 +6,6 @@ package cmd
 
 import (
 	"github.com/Gentleelephant/account-srv/config"
-	"github.com/Gentleelephant/account-srv/internal"
 	"github.com/Gentleelephant/account-srv/server"
 	"github.com/spf13/cobra"
 )
@@ -17,10 +16,7 @@ var startCmd = &cobra.Command{
 	Short: " start the server",
 	Long:  `start the server`,
 	Run: func(cmd *cobra.Command, args []string) {
-		err := server.Start()
-		if err != nil {
-			internal.Logger.Error(err.Error())
-		}
+		server.Start()
 	},
 }
 
