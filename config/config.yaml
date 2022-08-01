@@ -1,8 +1,21 @@
 logger:
-  path: ./log/zap.log
-  level: info
-  dateformat: '%Y-%m-%d %H:%M:%S'
-  maxsize: 10485760
+  level: "info"
+#  dateformat: '%Y-%m-%d %H:%M:%S'
+  maxSize: 100
+  maxAge: 1
+  maxBackups: 10
+  timeKey: "Time"
+  levelKey: "Level"
+  nameKey: "Logger"
+  messageKey: "Message"
+  callerKey: "CallerLine"
+  functionKey: "Func"
+  stacktraceKey: "Stacktrace"
+  lineEnding: "\n"
+  encoding: "json" # json or console
+  outputPath: "./logs/zap.log"
+  development: true
+
 nacos:
   ipAddr: "139.198.155.59"
   port: 8848
@@ -16,3 +29,7 @@ nacos:
   scheme: "http"
   beatInterval: 1000
   timeoutMs: 1000
+service:
+  name: account-srv
+  cluster: "DEFAULT"
+  group: "DEFAULT_GROUP"

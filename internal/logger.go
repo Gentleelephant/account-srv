@@ -2,10 +2,10 @@ package internal
 
 import (
 	"github.com/Gentleelephant/account-srv/config"
+	zlog "github.com/Gentleelephant/common/logger"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
-	"os"
 	"time"
 )
 
@@ -39,15 +39,16 @@ var (
 //}
 
 func InitLogger() {
-	Encoder := GetEncoder()
-	WriteSyncer := GetWriteSyncer()
-	LevelEnabler := GetLevelEnabler()
-	ConsoleEncoder := GetConsoleEncoder()
-	newCore := zapcore.NewTee(
-		zapcore.NewCore(Encoder, WriteSyncer, LevelEnabler),                    // 写入文件
-		zapcore.NewCore(ConsoleEncoder, zapcore.Lock(os.Stdout), LevelEnabler), // 写入控制台
-	)
-	logger := zap.New(newCore, zap.AddCaller())
+	//Encoder := GetEncoder()
+	//WriteSyncer := GetWriteSyncer()
+	//LevelEnabler := GetLevelEnabler()
+	//ConsoleEncoder := GetConsoleEncoder()
+	//newCore := zapcore.NewTee(
+	//	zapcore.NewCore(Encoder, WriteSyncer, LevelEnabler),                    // 写入文件
+	//	zapcore.NewCore(ConsoleEncoder, zapcore.Lock(os.Stdout), LevelEnabler), // 写入控制台
+	//)
+	//logger := zap.New(newCore, zap.AddCaller())
+	logger := zlog.GetDefaultLogger(config.LocalConfig)
 	Logger = logger
 	zap.ReplaceGlobals(logger)
 }
