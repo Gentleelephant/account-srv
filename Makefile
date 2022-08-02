@@ -11,3 +11,5 @@ check:
 
 clean:
 	@rm -f ./account-srv
+	@rm -rf ./cache
+	@rm -rf ./logs
