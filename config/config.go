@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"github.com/Gentleelephant/common/consts"
 	"github.com/Gentleelephant/common/utils"
 	"github.com/nacos-group/nacos-sdk-go/common/constant"
@@ -30,7 +29,6 @@ func GetRemoteConfig() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("read local config:", LocalConfig.AllSettings())
 	configParams := utils.NacosConfigparams{
 		DataId: LocalConfig.GetString(consts.NacosDataId),
 		Group:  LocalConfig.GetString(consts.NacosGroup),
@@ -51,7 +49,6 @@ func GetRemoteConfig() {
 		},
 	}
 	NacosConfig = &configParams
-	fmt.Println("read nacos config:", configParams)
 	RemoteConfig, err = utils.InitRemoteConfig(configParams)
 	if err != nil {
 		panic(err)

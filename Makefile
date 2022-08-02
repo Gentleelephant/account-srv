@@ -8,3 +8,6 @@ build:
 
 check:
 	@golangci-lint run
+
+clean:
+	@rm -f ./account-srv

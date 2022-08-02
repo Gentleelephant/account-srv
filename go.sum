@@ -58,14 +58,8 @@ github.com/BurntSushi/toml v0.3.1 h1:WXkYYl6Yr3qBf1K79EBnL4mak0OimBfB0XUf9Vl28OQ
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/BurntSushi/xgb v0.0.0-20160522181843-27f122750802/go.mod h1:IVnqGOEym/WlBOVXweHU+Q+/VP0lqqI8lqeDx9IjBqo=
 github.com/DataDog/datadog-go v3.2.0+incompatible/go.mod h1:LButxg5PwREeZtORoXG3tL4fMGNddJ+vMq1mwgfaqoQ=
-github.com/Gentleelephant/common v0.0.0-20220731091310-6547d05eca67 h1:a+tZgfgQ7E715NVqw53icqEQMEdMhcaqPy0QOJ4nK/E=
-github.com/Gentleelephant/common v0.0.0-20220731091310-6547d05eca67/go.mod h1:94c2BTbi1MOtbvW6exDVq8VHl8TCs0WYfuHnJ61iOTg=
-github.com/Gentleelephant/common v0.0.0-20220731101945-56df60fd5b0a h1:8w75Q10f2JvUlfuQzmChliZBSsiP7qMlwPw5wScYKfU=
-github.com/Gentleelephant/common v0.0.0-20220731101945-56df60fd5b0a/go.mod h1:94c2BTbi1MOtbvW6exDVq8VHl8TCs0WYfuHnJ61iOTg=
-github.com/Gentleelephant/common v0.0.0-20220801084852-bee22eaa2d4d h1:geXE3cU+dH8xeZxWs/msrNh3cnNnM1sVihYZb3xCXlM=
-github.com/Gentleelephant/common v0.0.0-20220801084852-bee22eaa2d4d/go.mod h1:94c2BTbi1MOtbvW6exDVq8VHl8TCs0WYfuHnJ61iOTg=
-github.com/Gentleelephant/common v0.0.0-20220801093445-662e7fc35f26 h1:PzZ8aO9KfHn5RsOXqL71/Vec/tgW9diiwmCJLy3tXCQ=
-github.com/Gentleelephant/common v0.0.0-20220801093445-662e7fc35f26/go.mod h1:94c2BTbi1MOtbvW6exDVq8VHl8TCs0WYfuHnJ61iOTg=
+github.com/Gentleelephant/common v0.0.0-20220801094830-ae982fe46543 h1:JPG1570LcyoCzRpZuGE3KwdVqOrTAbjGDFuZ6D25ypg=
+github.com/Gentleelephant/common v0.0.0-20220801094830-ae982fe46543/go.mod h1:94c2BTbi1MOtbvW6exDVq8VHl8TCs0WYfuHnJ61iOTg=
 github.com/Gentleelephant/proto-center v0.0.0-20220701081818-1f68d2a72672 h1:s38IPRAChNN13cW2ReBx4+G689F8Yeqr66JQ+XX7u+E=
 github.com/Gentleelephant/proto-center v0.0.0-20220701081818-1f68d2a72672/go.mod h1:um8bH+Q/bWE5zkxH89XfgoIDg+o4a/JpkEi2LZT1kfw=
 github.com/OneOfOne/xxhash v1.2.2/go.mod h1:HSdplMjZKSmBqAxg5vPj2TmRDmfkzw+cTzAElWljhcU=
