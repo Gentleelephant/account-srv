@@ -31,5 +31,5 @@ nacos:
   timeoutMs: 1000
   cluster: "DEFAULT"
 service:
-  port: 20000
+  port: 20001
   name: account-srv
