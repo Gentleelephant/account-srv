@@ -29,7 +29,7 @@ nacos:
   scheme: "http"
   beatInterval: 1000
   timeoutMs: 1000
-service:
-  name: account-srv
   cluster: "DEFAULT"
-  group: "DEFAULT_GROUP"
+service:
+  port: 20000
+  name: account-srv

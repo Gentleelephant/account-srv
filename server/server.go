@@ -18,26 +18,30 @@ import (
 
 func Start() {
 
-	port, err := utils.GetTCPPort()
-	if err != nil {
-		panic(err)
-	}
-	ip, err := utils.GetOutBoundIP()
-	if err != nil {
-		addr, err := utils.GetInterfaceIpv4Addr("eth0")
-		if err != nil {
-			panic(err)
-		}
-		ip = addr
-	}
-	host := ip
-
 	// 初始化配置
 	config.GetRemoteConfig()
 	// 初始化数据库
 	config.GetDB()
 	// 初始化日志
 	internal.InitLogger()
+
+	var port int
+	var host string
+	var err error
+	port = config.LocalConfig.GetInt("service.port")
+	if port == 0 {
+		port, err = utils.GetTCPPort()
+		if err != nil {
+			panic(err)
+		}
+	}
+	host, err = utils.GetOutBoundIP()
+	if err != nil {
+		host, err = utils.GetInterfaceIpv4Addr("eth0")
+		if err != nil {
+			panic(err)
+		}
+	}
 
 	// 启动grpc server
 	listen, err := net.Listen("tcp", fmt.Sprintf("%s:%d", host, port))
@@ -63,9 +67,9 @@ func Start() {
 		Enable:      true,
 		Healthy:     true,
 		Metadata:    nil,
-		ClusterName: config.LocalConfig.GetString("service.cluster"),
+		ClusterName: config.LocalConfig.GetString("nacos.cluster"),
 		ServiceName: config.LocalConfig.GetString("service.name"),
-		GroupName:   config.LocalConfig.GetString("service.group"),
+		GroupName:   config.LocalConfig.GetString("nacos.group"),
 		Ephemeral:   true,
 	}
 	_, err = utils.RegisterInstance(*config.NacosConfig, param)
@@ -79,9 +83,9 @@ func Start() {
 	deparams := vo.DeregisterInstanceParam{
 		Ip:          host,
 		Port:        uint64(port),
-		Cluster:     config.LocalConfig.GetString("service.cluster"),
+		Cluster:     config.LocalConfig.GetString("nacos.cluster"),
 		ServiceName: config.LocalConfig.GetString("service.name"),
-		GroupName:   config.LocalConfig.GetString("service.group"),
+		GroupName:   config.LocalConfig.GetString(config.LocalConfig.GetString("nacos.group")),
 		Ephemeral:   true,
 	}
 	_, err = utils.DeregisterInstance(*config.NacosConfig, deparams)
