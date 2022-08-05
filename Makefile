@@ -1,9 +1,11 @@
-.PHONY: build check help clean
+.PHONY: build check help clean update
 
 help:
 	@echo "use [make check]: code review"
 	@echo "use [make build]: build project"
 	@echo "use [make clean]: clean project"
+	@echo "use [make update]: git pull project"
+	@echo "use [make image]: build docker image. do not use it"
 build:
 	@go build -o account-srv main.go
 
@@ -17,3 +19,6 @@ clean:
 
 update:
 	@git pull
+
+image:
+	@bash ./build.sh
